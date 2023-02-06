@@ -3,20 +3,22 @@ package com.poit.mynote.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.poit.mynote.dao.db.NoteDatabase
 import com.poit.mynote.entity.Note
 import com.poit.mynote.repository.NoteRepository
+import com.poit.mynote.repository.NoteRepositoryFactory
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 open class NoteViewModel(application: Application) : AndroidViewModel(application) {
-    open val allNotes: LiveData<List<Note>>
-    private val repository: NoteRepository
+    val allNotes: MutableLiveData<List<Note>>
+    private var repository: NoteRepository
+    private val repositoryFactory = NoteRepositoryFactory()
 
     init {
-        val dao = NoteDatabase.getDatabase(application).getNotesDao()
-        repository = NoteRepository(dao)
+        repository = repositoryFactory.getRepositoryInstance("FS", application)
         allNotes = repository.allNotes
     }
 
@@ -30,5 +32,10 @@ open class NoteViewModel(application: Application) : AndroidViewModel(applicatio
 
     open fun createNote(note: Note) = viewModelScope.launch (Dispatchers.IO) {
         repository.insert(note)
+    }
+
+    fun switchNoteSource(dbType: String, application: Application) {
+        repository = repositoryFactory.getRepositoryInstance(dbType, application)
+        allNotes.value = repository.allNotes.value
     }
 }

@@ -12,12 +12,10 @@ import java.io.File
 import java.nio.charset.Charset
 
 class NoteFsViewModel(application: Application) : NoteViewModel(application) {
-    override val allNotes: LiveData<List<Note>>
     val storage: File
 
     init {
         storage = File("${application.applicationContext.filesDir}/myNoteStore.txt")
-        allNotes = MutableLiveData(storage.readLines().map { Klaxon().parse<Note>(it)!! })
     }
 
     override fun deleteNote(note: Note) = viewModelScope.launch(Dispatchers.IO) {

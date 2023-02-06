@@ -13,7 +13,6 @@ import com.poit.mynote.entity.Note
 import com.poit.mynote.adapter.NoteClickDeleteInterface
 import com.poit.mynote.adapter.NoteClickInterface
 import com.poit.mynote.adapter.NoteRVAdapter
-import com.poit.mynote.viewmodel.NoteFsViewModel
 import com.poit.mynote.viewmodel.NoteViewModel
 
 class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInterface {
@@ -35,8 +34,12 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
         val noteRVAdapter = NoteRVAdapter(this, this, this)
         notesRV.adapter = noteRVAdapter
 
-        viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
-            .get(if (switchType.isChecked) NoteViewModel::class.java else NoteFsViewModel::class.java)
+        viewModel = ViewModelProvider(
+            this,
+            ViewModelProvider.AndroidViewModelFactory.getInstance(application)
+        ).get(NoteViewModel::class.java)
+
+        viewModel.switchNoteSource(if (switchType.isChecked) "DB" else "FS", application)
 
         viewModel.allNotes.observe(this) { list ->
             list?.let {
@@ -53,15 +56,8 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
 
         switchType.setOnCheckedChangeListener { _, isChecked ->
             switchType.text = if (isChecked) "DB" else "FS"
-
-            viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))
-                .get(if (isChecked) NoteViewModel::class.java else NoteFsViewModel::class.java)
-
-            viewModel.allNotes.observe(this@MainActivity) { list ->
-                list?.let {
-                    noteRVAdapter.updateList(it)
-                }
-            }
+            viewModel.switchNoteSource(if (isChecked) "DB" else "FS", application)
+            println(viewModel.allNotes.value)
         }
     }
 
