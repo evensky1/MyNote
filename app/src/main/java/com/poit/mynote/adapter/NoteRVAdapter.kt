@@ -51,6 +51,11 @@ class NoteRVAdapter(
         allNotes.addAll(newList)
         notifyDataSetChanged()
     }
+
+    fun sortList(patternStr: String) {
+        allNotes.sortBy { it.title.contains(patternStr) }
+        notifyDataSetChanged()
+    }
 }
 
 interface NoteClickDeleteInterface {

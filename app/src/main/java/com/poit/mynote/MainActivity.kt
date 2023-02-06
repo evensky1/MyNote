@@ -2,6 +2,7 @@ package com.poit.mynote
 
 import android.content.Intent
 import android.os.Bundle
+import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
@@ -21,6 +22,7 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
     private lateinit var addFAB: FloatingActionButton
     private lateinit var viewModel: NoteViewModel
     private lateinit var switchType: SwitchCompat
+    private lateinit var searchEdit: EditText
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,6 +51,11 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
             intent.putExtra("typeIsChecked", switchType.isChecked)
             startActivity(intent)
             this.finish()
+        }
+
+        searchEdit.setOnKeyListener { v, keyCode, event ->
+           noteRVAdapter.sortList(searchEdit.text.toString())
+            true
         }
 
         switchType.setOnCheckedChangeListener { _, isChecked ->
