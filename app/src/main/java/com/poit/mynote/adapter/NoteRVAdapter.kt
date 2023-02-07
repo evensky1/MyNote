@@ -17,6 +17,7 @@ class NoteRVAdapter(
 ) : RecyclerView.Adapter<NoteRVAdapter.ViewHolder>() {
 
     private val allNotes = ArrayList<Note>()
+    private val cachedNotes = ArrayList<Note>()
 
     inner class ViewHolder (itemView: View) : RecyclerView.ViewHolder(itemView) {
         val note = itemView.findViewById<TextView>(R.id.noteTitle)
@@ -35,7 +36,7 @@ class NoteRVAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         holder.note.text = allNotes[position].title
-        holder.lastModified.text = "Last modified: ${allNotes[position].lastModified}";
+        holder.lastModified.text = "Last modified: ${allNotes[position].lastModified}"
 
         holder.deleteBtn.setOnClickListener {
             noteClickDeleteInterface.onDeleteIconClick(allNotes[position])
@@ -49,11 +50,13 @@ class NoteRVAdapter(
     fun updateList(newList: List<Note>) {
         allNotes.clear()
         allNotes.addAll(newList)
+        cachedNotes.addAll(newList)
         notifyDataSetChanged()
     }
 
     fun sortList(patternStr: String) {
-        allNotes.sortBy { it.title.contains(patternStr) }
+        allNotes.clear()
+        allNotes.addAll(cachedNotes.filter { it.title.contains(patternStr) })
         notifyDataSetChanged()
     }
 }

@@ -41,15 +41,7 @@
         android:layout_margin="10dp"
         android:layout_alignParentBottom="true"
         android:layout_alignParentEnd="true"
-        android:text="Save to db"/>
+        android:text="Save"/>
 
 
-    <Button
-        android:id="@+id/fsSaveBtn"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="10dp"
-        android:layout_alignParentStart="true"
-        android:layout_alignParentBottom="true"
-        android:text="Save to filesystem" />
 </RelativeLayout>

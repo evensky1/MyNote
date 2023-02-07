@@ -15,7 +15,6 @@ class NoteEditorActivity : AppCompatActivity() {
     lateinit var noteTitleEdit: EditText
     lateinit var noteDescriptionEdit: EditText
     lateinit var saveToDbButton: Button
-    lateinit var saveToFsButton: Button
     lateinit var viewModel: NoteViewModel
     var noteId = -1
 
@@ -26,7 +25,6 @@ class NoteEditorActivity : AppCompatActivity() {
         noteTitleEdit = findViewById(R.id.noteTitleEdit)
         noteDescriptionEdit = findViewById(R.id.noteDescriptionEdit)
         saveToDbButton = findViewById(R.id.dbSaveBtn)
-        saveToFsButton = findViewById(R.id.fsSaveBtn)
         val isChecked = intent.getBooleanExtra("typeIsChecked", false)
 
         viewModel = ViewModelProvider(this, ViewModelProvider.AndroidViewModelFactory.getInstance(application))

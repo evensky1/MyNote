@@ -6,6 +6,7 @@ import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import android.widget.Toast
 import androidx.appcompat.widget.SwitchCompat
+import androidx.core.widget.addTextChangedListener
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -30,6 +31,8 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
         notesRV = findViewById(R.id.rvNotes)
         addFAB = findViewById(R.id.сreateNoteButton)
         switchType = findViewById(R.id.storeTypeSwitch)
+        searchEdit = findViewById(R.id.findByTitleEdit)
+
         switchType.isChecked = intent.getBooleanExtra("switch", false)
 
         notesRV.layoutManager = LinearLayoutManager(this)
@@ -43,6 +46,7 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
         viewModel.allNotes.observe(this) { list ->
             list?.let {
                 noteRVAdapter.updateList(it)
+                noteRVAdapter.sortList(searchEdit.text.toString())
             }
         }
 
@@ -53,9 +57,8 @@ class MainActivity : AppCompatActivity(), NoteClickDeleteInterface, NoteClickInt
             this.finish()
         }
 
-        searchEdit.setOnKeyListener { v, keyCode, event ->
-           noteRVAdapter.sortList(searchEdit.text.toString())
-            true
+        searchEdit.addTextChangedListener {
+            noteRVAdapter.sortList(searchEdit.text.toString())
         }
 
         switchType.setOnCheckedChangeListener { _, isChecked ->
