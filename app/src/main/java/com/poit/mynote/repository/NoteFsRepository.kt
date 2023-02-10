@@ -6,14 +6,14 @@ import com.poit.mynote.entity.Note
 import java.io.File
 import java.nio.charset.Charset
 
-class NoteFsRepository(val storage: File) {
+class NoteFsRepository(private val storage: File) {
     val allNotes = MutableLiveData(storage.readLines().map { Klaxon().parse<Note>(it)!! })
 
     fun deleteNote(note: Note) {
         val str = storage.readText()
             .replace("\\{.+\"id\" : ${note.id}.+\\}\n".toRegex(), "")
 
-        storage.writeText(str);
+        storage.writeText(str)
 
         allNotes.postValue(storage.readLines().map { Klaxon().parse<Note>(it)!! })
     }
@@ -22,7 +22,7 @@ class NoteFsRepository(val storage: File) {
         val str = storage.readText()
             .replace("\\{.+\"id\" : ${note.id}.+\\}".toRegex(), Klaxon().toJsonString(note))
 
-        storage.writeText(str);
+        storage.writeText(str)
 
         allNotes.postValue(storage.readLines().map { Klaxon().parse<Note>(it)!! })
     }
